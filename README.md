@@ -56,18 +56,18 @@ The following commands learn a neural network and score on the test set. Trainin
 python src/main.py
 ```
 <p align="center">
-<img style="float: center;" src="ngcn_run.jpg">
+<img style="float: center;" src="splitter_run.jpg">
 </p>
 
-Training an NGCN model for a 100 epochs.
+Training a Splitter model with 32 dimensions.
 ```
 python src/main.py --epochs 100
 ```
-Increasing the learning rate and the dropout.
+Increasing the number of walks and the walk length.
 ```
 python src/main.py --learning-rate 0.1 --dropout 0.9
 ```
-Training a two layer model:
+Using another dataset:
 ```
 python src/main.py --layers 64 64
 ```
