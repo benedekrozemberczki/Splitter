@@ -2,7 +2,7 @@ Splitter
 ============================================
 A Pytorch implementation of "Splitter: Learning Node Representations that Capture Multiple Social Contexts" (WWW 2019).
 <p align="center">
-  <img width="800" src="ngcn.jpg">
+  <img width="800" src="splitter.jpg">
 </p>
 <p align="justify">
 Recent interest in graph embedding methods has focused on learn-ing a single representation for each node in the graph. But can nodesreally be best described by a single vector representation? In thiswork, we propose a method for learning multiple representations ofthe nodes in a graph (e.g., the users of a social network). Based on aprincipled decomposition of the ego-network, each representationencodes the role of the node in a different local community in whichthe nodes participate. These representations allow for improvedreconstruction of the nuanced relationships that occur in the graph– a phenomenon that we illustrate through state-of-the-art resultson link prediction tasks on a variety of graphs, reducing the errorby up to 90%. In addition, we show that these embeddings allow foreffective visual analysis of the learned community structure.</p>
