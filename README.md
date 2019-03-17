@@ -7,11 +7,11 @@ A Pytorch implementation of "Splitter: Learning Node Representations that Captur
 <p align="justify">
 Recent methods generalize convolutional layers from Euclidean domains to graph-structured data by approximating the eigenbasis of the graph Laplacian. The computationally-efficient and broadly-used Graph ConvNet of Kipf & Welling, over-simplifies the approximation, effectively rendering graph convolution as a neighborhood-averaging operator. This simplification restricts the model from learning delta operators, the very premise of the graph Laplacian.  In this work, we propose a new Graph Convolutional layer which mixes multiple powers of the adjacency matrix, allowing it to learn delta operators. Our layer exhibits the same memory footprint and computational complexity as a GCN. We illustrate the strength of our proposed layer on both synthetic graph datasets, and on several real-world citation graphs, setting the record state-of-the-art on Pubmed.</p>
 
-This repository provides a PyTorch implementation of NGCN as described in the paper:
+This repository provides a PyTorch implementation of Splitter as described in the paper:
 
-> A Higher-Order Graph Convolutional Layer.
-> Sami A Abu-El-Haija, Bryan Perozzi, Amol Kapoor, Nazanin Alipourfard, Hrayr Harutyunyan.
-> NeurIPS, 2018.
+> Splitter: Learning Node Representations that Capture Multiple Social Contexts.
+> Alessandro Epasto and Bryan Perozzi.
+> WWW, 2019.
 > [[Paper]](http://sami.haija.org/papers/high-order-gc-layer.pdf)
 
 ### Requirements
