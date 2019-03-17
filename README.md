@@ -12,7 +12,7 @@ This repository provides a PyTorch implementation of Splitter as described in th
 > Splitter: Learning Node Representations that Capture Multiple Social Contexts.
 > Alessandro Epasto and Bryan Perozzi.
 > WWW, 2019.
-> [[Paper]](http://sami.haija.org/papers/high-order-gc-layer.pdf)
+> [[Paper]](http://epasto.org/papers/www2019splitter.pdf)
 
 ### Requirements
 The codebase is implemented in Python 3.5.2. package versions used for development are just below.
