@@ -19,6 +19,9 @@ class Splitter(torch.nn.Module):
          self.node_count = node_count
 
      def create_weights(self):
+         """
+         Creating weights for embedding.
+         """
          self.base_node_embedding = torch.nn.Embedding(self.base_node_count, self.args.dimensions, padding_idx = 0)
          self.node_embedding = torch.nn.Embedding(self.node_count, self.args.dimensions, padding_idx = 0)
          self.node_noise_embedding = torch.nn.Embedding(self.node_count, self.args.dimensions, padding_idx = 0)
@@ -32,7 +35,7 @@ class Splitter(torch.nn.Module):
      def calculate_main_loss(self, sources, contexts, targets):
          node_f = self.node_embedding(sources)
          node_f = torch.t(torch.t(node_f) /torch.norm(node_f , p=2, dim=1))
-         feature_f = self.node_embedding(contexts)
+         feature_f = self.node_noise_embedding(contexts)
          feature_f = torch.t(torch.t(feature_f) /torch.norm(feature_f , p=2, dim=1))
          scores = torch.sum(node_f * feature_f,dim=1) 
          scores = torch.exp(scores)/(1+torch.exp(scores))
