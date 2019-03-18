@@ -41,7 +41,7 @@ def parameter_parser():
     parser.add_argument("--walk-length",
                         type = int,
                         default = 40,
-	                help = "Number of training epochs. Default is 200.")
+	                help = "Trunctaed random walk length. Default is 200.")
 
     parser.add_argument("--seed",
                         type = int,
