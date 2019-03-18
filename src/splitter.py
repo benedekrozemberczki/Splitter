@@ -62,6 +62,12 @@ class Splitter(torch.nn.Module):
          return main_loss
 
      def calculate_regularization(self, pure_sources, personas):
+         """
+         Calculating the regularization loss.
+         :param pure_sources: Source nodes in persona graph.
+         :param personas: Context node vector.
+         :return regularization_loss: Loss value.
+         """
          source_f = self.node_embedding(pure_sources)
          original_f = self.base_node_embedding(personas)
          source_f = source_f/torch.norm(source_f , p=2, dim=0)
