@@ -35,9 +35,9 @@ The training of a Splitter embedding is handled by the `src/main.py` script whic
 
 #### Input and output options
 ```
-  --edge-path       STR    Edge list csv.         Default is `input/cora_edges.csv`.
-  --features-path   STR    Features json.         Default is `input/cora_features.json`.
-  --target-path     STR    Target classes csv.    Default is `input/cora_target.csv`.
+  --edge-path               STR    Edge list csv.           Default is `input/chameleon_edges.csv`.
+  --embedding-output-path   STR    Embedding output csv.    Default is `output/chameleon_embedding.csv`.
+  --persona-output-path     STR    Persona mapping JSON.    Default is `output/chameleon_personas.json`.
 ```
 #### Model options
 ```
