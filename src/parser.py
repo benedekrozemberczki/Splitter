@@ -56,7 +56,7 @@ def parameter_parser():
     parser.add_argument("--lambd",
                         type = float,
                         default = 0.1,
-	                help = "Learning rate. Default is 0.01.")
+	                help = "Regularization parameter. Default is 0.01.")
 
     parser.add_argument("--dimensions",
                         type = int,
