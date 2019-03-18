@@ -26,7 +26,7 @@ def parameter_parser():
     parser.add_argument("--number-of-walks",
                         type = int,
                         default = 10,
-	                help = "Number of training epochs. Default is 200.")
+	                help = "Number of random walks per source node. Default is 200.")
 
     parser.add_argument("--window-size",
                         type = int,
