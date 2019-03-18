@@ -21,7 +21,7 @@ def parameter_parser():
     parser.add_argument("--persona-output-path",
                         nargs = "?",
                         default = "./output/chameleon_personas.json",
-	                help = "Target classes csv.")
+	                help = "Persona output path.")
 
     parser.add_argument("--number-of-walks",
                         type = int,
