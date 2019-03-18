@@ -32,6 +32,8 @@ The code takes the **edge list** of the graph in a csv file. Every row indicates
 
 ### Outputs
 
+The embeddings are saved in the `input/` directory. Each embedding has a header and a column with the node IDs. Finally, the node embedding is sorted by the node ID column.
+
 ### Options
 The training of a Splitter embedding is handled by the `src/main.py` script which provides the following command line arguments.
 
