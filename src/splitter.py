@@ -162,8 +162,6 @@ class SplitterTrainer(object):
         self.embedding = pd.DataFrame(self.embedding, columns = embedding_header)
         self.embedding.to_csv(self.args.embedding_output_path, index = None)
 
-
     def save_persona_graph_mapping(self):
         with open(self.args.persona_output_path, "w") as f:
            json.dump(self.egonet_splitter.personality_map, f)                     
-                
