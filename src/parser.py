@@ -61,7 +61,7 @@ def parameter_parser():
     parser.add_argument("--dimensions",
                         type = int,
                         default = 32,
-	                help = "Learning rate. Default is 0.01.")
+	                help = "Embedding dimensions. Default is 32.")
 
     parser.add_argument('--workers',
                         type = int,
