@@ -1,6 +1,6 @@
 import torch
-from splitter import SplitterTrainer
 from parser import parameter_parser
+from splitter import SplitterTrainer
 from utils import tab_printer, graph_reader
 
 def main():
