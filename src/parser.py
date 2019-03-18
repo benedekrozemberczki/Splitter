@@ -10,27 +10,22 @@ def parameter_parser():
 
     parser.add_argument("--edge-path",
                         nargs = "?",
-                        default = "./input/cora_edges.csv",
+                        default = "./input/chameleon_edges.csv",
 	                help = "Edge list csv.")
 
     parser.add_argument("--embedding-output-path",
                         nargs = "?",
-                        default = "./output/cora_embedding.csv",
+                        default = "./output/chameleon_embedding.csv",
 	                help = "Target classes csv.")
 
     parser.add_argument("--persona-output-path",
                         nargs = "?",
-                        default = "./input/cora_personas.json",
+                        default = "./output/chameleon_personas.json",
 	                help = "Target classes csv.")
-
-    parser.add_argument("--epochs",
-                        type = int,
-                        default = 1,
-	                help = "Number of training epochs. Default is 200.")
 
     parser.add_argument("--number-of-walks",
                         type = int,
-                        default = 10,
+                        default = 5,
 	                help = "Number of training epochs. Default is 200.")
 
     parser.add_argument("--window-size",
@@ -53,14 +48,9 @@ def parameter_parser():
                         default = 42,
 	                help = "Random seed for train-test split. Default is 42.")
 
-    parser.add_argument("--early-stopping",
-                        type = int,
-                        default = 5,
-	                help = "Number of early stopping rounds. Default is 5.")
-
-    parser.add_argument("--start-learning-rate",
+    parser.add_argument("--learning-rate",
                         type = float,
-                        default = 0.01,
+                        default = 0.05,
 	                help = "Learning rate. Default is 0.01.")
 
     parser.add_argument("--lambd",
@@ -68,14 +58,9 @@ def parameter_parser():
                         default = 0.1,
 	                help = "Learning rate. Default is 0.01.")
 
-    parser.add_argument("--minimal-learning-rate",
-                        type = float,
-                        default = 0.001,
-	                help = "Learning rate. Default is 0.01.")
-
     parser.add_argument("--dimensions",
                         type = int,
-                        default = 32,
+                        default = 128,
 	                help = "Learning rate. Default is 0.01.")
 
     parser.add_argument('--workers',

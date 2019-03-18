@@ -13,6 +13,8 @@ def main():
     graph = graph_reader(args.edge_path)
     trainer = SplitterTrainer(graph, args)
     trainer.fit()
+    trainer.save_embedding()
+    trainer.save_persona_graph_mapping()
 
 if __name__ == "__main__":
     main()
