@@ -62,13 +62,9 @@ python src/main.py
 
 Training a Splitter model with 32 dimensions.
 ```
-python src/main.py --epochs 100
+python src/main.py --dimensions 32
 ```
 Increasing the number of walks and the walk length.
 ```
-python src/main.py --learning-rate 0.1 --dropout 0.9
-```
-Using another dataset:
-```
-python src/main.py --layers 64 64
+python src/main.py --number-of-walks 20 --walk-length 80
 ```
