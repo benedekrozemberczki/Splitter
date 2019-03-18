@@ -58,9 +58,7 @@ The following commands learn an embedding and save it with the persona map. Trai
 ```
 python src/main.py
 ```
-<p align="center">
-<img style="float: center;" src="splitter_run.jpg">
-</p>
+![](splitter.gif)
 
 Training a Splitter model with 32 dimensions.
 ```
