@@ -54,12 +54,6 @@ class Splitter(torch.nn.Module):
          loss = main_loss + self.args.lambd*regularization_loss
          return loss
          
-
-
-
-
-
-
 class SplitterTrainer(object):
 
     def __init__(self, graph, args):
