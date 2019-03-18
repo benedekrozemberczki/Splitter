@@ -12,10 +12,13 @@ class DeepWalker(object):
     Video: https://www.youtube.com/watch?v=aZNtHJwfIVg
     """
     def __init__(self, graph, args):
+        """
+        :param graph: NetworkX graph.
+        :param args: Arguments object.
+        """
         self.graph = graph
         self.args = args
         
-
     def small_walk(self,start_node):
         walk = [start_node]
         while len(walk) < self.args.walk_length:
