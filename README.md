@@ -54,7 +54,7 @@ The training of a Splitter embedding is handled by the `src/main.py` script whic
   --learning-rate      FLOAT   SGD learning rate.                 Default is 0.025
 ```
 ### Examples
-The following commands learn a neural network and score on the test set. Training a model on the default dataset.
+The following commands learn an embedding and save it with the persona map. Training a model on the default dataset.
 ```
 python src/main.py
 ```
