@@ -16,7 +16,7 @@ def parameter_parser():
     parser.add_argument("--embedding-output-path",
                         nargs = "?",
                         default = "./output/chameleon_embedding.csv",
-	                help = "Embedding output csv.")
+	                help = "Embedding output path.")
 
     parser.add_argument("--persona-output-path",
                         nargs = "?",
