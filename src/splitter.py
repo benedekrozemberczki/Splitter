@@ -79,6 +79,13 @@ class Splitter(torch.nn.Module):
 
      def forward(self, sources, contexts, targets, personas, pure_sources):
          """
+         Doing a forward pass.
+         :param sources: Source node vector.
+         :param contexts: Context node vector.
+         :param targets: Binary target vector.
+         :param pure_sources: Source nodes in persona graph.
+         :param personas: Context node vector.
+         :return loss: Loss value.
          """
          main_loss = self.calculate_main_loss(sources, contexts, targets)
          regularization_loss = self.calculate_regularization(pure_sources, personas)
