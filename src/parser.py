@@ -2,7 +2,7 @@ import argparse
 
 def parameter_parser():
     """
-    A method to parse up command line parameters. By default it trains on the Cora dataset.
+    A method to parse up command line parameters. By default it trains on the Chameleons dataset.
     The default hyperparameters give a good quality representation without grid search.
     """
 
@@ -36,7 +36,7 @@ def parameter_parser():
     parser.add_argument("--negative-samples",
                         type = int,
                         default = 5,
-	                help = "Number of training epochs. Default is 200.")
+	                help = "Number of training epochs. Default is 5.")
 
     parser.add_argument("--walk-length",
                         type = int,
