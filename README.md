@@ -41,14 +41,15 @@ The training of a Splitter embedding is handled by the `src/main.py` script whic
 ```
 #### Model options
 ```
-  --seed              INT     Random seed.                   Defailt is 42.
-  --epochs            INT     Number of training epochs.     Default is 200.
-  --early-stopping    INT     Early stopping rounds.         Default is 5.
-  --training-size     INT     Training set size.             Default is 1500.
-  --validation-size   INT     Validation set size.           Default is 500.
-  --learning-rate     FLOAT   Adam learning rate.            Default is 0.01
-  --dropout           FLOAT   Dropout rate value.            Default is 0.5
-  --layers            LST     Layer sizes for model.         Default is [64, 64, 64]. 
+  --seed               INT     Random seed.                       Default is 42.
+  --number of walks    INT     Number of random walks per node.   Default is 10.
+  --window-size        INT     Skip-gram window size.             Default is 5
+  --negative-samples   INT     Number of negative samples.        Default is 5,
+  --walk-length        INT     Random walk length.                Default is 40.
+  --lambd              FLOAT   Regularization parameter.          Default is 0.1
+  --dimensions         INT     Number of embedding dimensions.    Default is 32.
+  --workers            INT     Number of cores for pre-training.  Default is 4.   
+  --learning-rate      FLOAT   SGD learning rate.                 Default is 0.025
 ```
 ### Examples
 The following commands learn a neural network and score on the test set. Training a model on the default dataset.
