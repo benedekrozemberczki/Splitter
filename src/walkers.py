@@ -43,6 +43,10 @@ class DeepWalker(object):
                 self.paths.append(walk)
 
     def learn_base_embedding(self):
+        """
+        Learning an embedding of nodes in the base graph.
+        :return self.embedding: Embedding of nodes in the latent space.
+        """
         self.paths = [[str(node) for node in walk] for walk in self.paths]
         model = Word2Vec(self.paths, size = self.args.dimensions, window = self.args.window_size, min_count = 1, sg = 1, workers = self.args.workers, iter = 1)
         self.embedding = np.array([list(model[str(n)]) for n in self.graph.nodes()])
