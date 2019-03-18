@@ -8,7 +8,10 @@ import numpy as np
 import pandas as pd
 
 class Splitter(torch.nn.Module):
-
+     """
+     An implementation of "Splitter: Learning Node Representations that Capture Multiple Social Contexts" (WWW 2019).
+     Paper: http://epasto.org/papers/www2019splitter.pdf
+     """
      def __init__(self, args, base_node_count, node_count):
          super(Splitter, self).__init__()
          self.args = args
