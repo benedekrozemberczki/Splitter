@@ -27,6 +27,11 @@ class Splitter(torch.nn.Module):
          self.node_noise_embedding = torch.nn.Embedding(self.node_count, self.args.dimensions, padding_idx = 0)
 
      def initialize_weights(self, base_node_embedding, mapping):
+         """
+         Using the base embedding and the persona mapping for initializing the embedding matrices.
+         :param base_node_embedding: Node embedding of the source graph.
+         :param mapping: Mapping of personas to nodes.
+         """
          persona_embedding = np.array([base_node_embedding[original_node] for node, original_node in mapping.items()])
          self.node_embedding.weight.data = torch.nn.Parameter(torch.Tensor(persona_embedding))
          self.node_noise_embedding.weight.data = torch.nn.Parameter(torch.Tensor(persona_embedding))
