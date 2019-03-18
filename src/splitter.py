@@ -148,8 +148,6 @@ class SplitterTrainer(object):
             average_loss = self.losses/self.steps
             self.walk_steps.set_description("Splitter (Loss=%g)" % round(average_loss,4))
 
-
-
     def save_embedding(self):
         """
         Saving the node embedding.
