@@ -36,7 +36,7 @@ def parameter_parser():
     parser.add_argument("--negative-samples",
                         type = int,
                         default = 5,
-	                help = "Number of training epochs. Default is 5.")
+	                help = "Negative sample number. Default is 5.")
 
     parser.add_argument("--walk-length",
                         type = int,
