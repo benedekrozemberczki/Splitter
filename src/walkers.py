@@ -33,6 +33,9 @@ class DeepWalker(object):
         return walk
 
     def create_features(self):
+        """
+        Creating random walks from each node.
+        """
         self.paths = []
         for node in tqdm(self.graph.nodes()):
             for k in range(self.args.number_of_walks):
