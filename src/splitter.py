@@ -44,6 +44,13 @@ class Splitter(torch.nn.Module):
          self.base_node_embedding.weight.data = torch.nn.Parameter(torch.Tensor(base_node_embedding),requires_grad=False)
 
      def calculate_main_loss(self, sources, contexts, targets):
+         """
+         Calculating the main embedding loss.
+         :param sources: Source node vector.
+         :param contexts: Context node vector.
+         :param targets: Binary target vector.
+         :return main_loss: Loss value.
+         """
          node_f = self.node_embedding(sources)
          node_f = torch.t(torch.t(node_f) /torch.norm(node_f , p=2, dim=1))
          feature_f = self.node_noise_embedding(contexts)
