@@ -29,7 +29,8 @@ class Splitter(torch.nn.Module):
      def calculate_main_loss(self, sources, contexts, targets):
          node_f = self.node_embedding(sources)
          node_f = torch.t(torch.t(node_f) /torch.norm(node_f , p=2, dim=1))
-         feature_f = self.node_noise_embedding(contexts)
+
+         feature_f = self.node_embedding(contexts)
          feature_f = torch.t(torch.t(feature_f) /torch.norm(feature_f , p=2, dim=1))
          scores = torch.sum(node_f * feature_f,dim=1) 
          scores = torch.exp(scores)/(1+torch.exp(scores))
@@ -133,6 +134,9 @@ class SplitterTrainer(object):
         self.losses = 0
         self.walk_steps = trange(len(self.persona_walker.paths), desc="Loss")
         for step in self.walk_steps:
+            if step % 1000 ==0:
+                self.steps = 0
+                self.losses = 0
             walk = self.persona_walker.paths[step]
             for i in range(self.args.walk_length-5):
                 for j in range(1,self.args.window_size+1):

@@ -16,7 +16,7 @@ def parameter_parser():
     parser.add_argument("--embedding-output-path",
                         nargs = "?",
                         default = "./output/chameleon_embedding.csv",
-	                help = "Target classes csv.")
+	                help = "Embedding output csv.")
 
     parser.add_argument("--persona-output-path",
                         nargs = "?",
@@ -25,7 +25,7 @@ def parameter_parser():
 
     parser.add_argument("--number-of-walks",
                         type = int,
-                        default = 5,
+                        default = 10,
 	                help = "Number of training epochs. Default is 200.")
 
     parser.add_argument("--window-size",
@@ -50,7 +50,7 @@ def parameter_parser():
 
     parser.add_argument("--learning-rate",
                         type = float,
-                        default = 0.05,
+                        default = 0.025,
 	                help = "Learning rate. Default is 0.01.")
 
     parser.add_argument("--lambd",
@@ -60,7 +60,7 @@ def parameter_parser():
 
     parser.add_argument("--dimensions",
                         type = int,
-                        default = 128,
+                        default = 32,
 	                help = "Learning rate. Default is 0.01.")
 
     parser.add_argument('--workers',
