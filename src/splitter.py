@@ -13,6 +13,12 @@ class Splitter(torch.nn.Module):
      Paper: http://epasto.org/papers/www2019splitter.pdf
      """
      def __init__(self, args, base_node_count, node_count):
+         """
+         Splliter set up.
+         :param args: Arguments object.
+         :param base_node_count: Number of nodes in the source graph.
+         :param node_count: Number of nodes in the persona graph.
+         """
          super(Splitter, self).__init__()
          self.args = args
          self.base_node_count = base_node_count
