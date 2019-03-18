@@ -130,12 +130,12 @@ class SplitterTrainer(object):
                 self.steps = 0
                 self.losses = 0
             walk = self.persona_walker.paths[step]
-            for i in range(self.args.walk_length-5):
+            for i in range(self.args.walk_length-self.args.window_size):
                 for j in range(1,self.args.window_size+1):
                     source_node = walk[i]
                     context_node = walk[i+j]
                     self.create_batch(source_node, context_node)
-            for i in range(5,self.args.walk_length):
+            for i in range(self.args.window_size,self.args.walk_length):
                 for j in range(1,self.args.window_size+1):
                     source_node = walk[i]
                     context_node = walk[i-j]
