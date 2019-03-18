@@ -84,7 +84,6 @@ class SplitterTrainer(object):
         self.model.initialize_weights(self.base_node_embedding, self.egonet_splitter.personality_map)
         self.model = self.model.to(self.device)
 
-
     def reset_node_sets(self):
         self.pure_sources = []
         self.personas = []
