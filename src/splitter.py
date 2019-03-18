@@ -14,7 +14,7 @@ class Splitter(torch.nn.Module):
      """
      def __init__(self, args, base_node_count, node_count):
          """
-         Splliter set up.
+         Splitter set up.
          :param args: Arguments object.
          :param base_node_count: Number of nodes in the source graph.
          :param node_count: Number of nodes in the persona graph.
