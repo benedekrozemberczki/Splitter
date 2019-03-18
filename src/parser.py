@@ -31,7 +31,7 @@ def parameter_parser():
     parser.add_argument("--window-size",
                         type = int,
                         default = 5,
-	                help = "Number of training epochs. Default is 200.")
+	                help = "Number of training epochs. Default is 5.")
 
     parser.add_argument("--negative-samples",
                         type = int,
