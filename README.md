@@ -61,7 +61,7 @@ python src/main.py
 <p align="center">
 ![](splitter.gif)
 </p>
-<p align="justify">
+
 Training a Splitter model with 32 dimensions.
 ```
 python src/main.py --dimensions 32
