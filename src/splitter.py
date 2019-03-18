@@ -41,7 +41,7 @@ class Splitter(torch.nn.Module):
          persona_embedding = np.array([base_node_embedding[original_node] for node, original_node in mapping.items()])
          self.node_embedding.weight.data = torch.nn.Parameter(torch.Tensor(persona_embedding))
          self.node_noise_embedding.weight.data = torch.nn.Parameter(torch.Tensor(persona_embedding))
-         self.base_node_embedding.weight.data = torch.nn.Parameter(torch.Tensor(base_node_embedding),requires_grad=False)
+         self.base_node_embedding.weight.data = torch.nn.Parameter(torch.Tensor(base_node_embedding), requires_grad=False)
 
      def calculate_main_loss(self, sources, contexts, targets):
          """
@@ -52,11 +52,10 @@ class Splitter(torch.nn.Module):
          :return main_loss: Loss value.
          """
          node_f = self.node_embedding(sources)
-         node_f = torch.t(torch.t(node_f) /torch.norm(node_f , p=2, dim=1))
          feature_f = self.node_noise_embedding(contexts)
-         feature_f = torch.t(torch.t(feature_f) /torch.norm(feature_f , p=2, dim=1))
-         scores = torch.sum(node_f * feature_f,dim=1) 
-         scores = torch.exp(scores)/(1+torch.exp(scores))
+         scores = torch.mm(node_f, torch.t(feature_f))
+         scores = torch.clamp(scores, min=-10, max=10)
+         scores = torch.sigmoid(scores)
          main_loss = targets*torch.log(scores) + (1-targets)*torch.log(1-scores)
          main_loss = -torch.mean(main_loss)
          return main_loss
@@ -70,10 +69,9 @@ class Splitter(torch.nn.Module):
          """
          source_f = self.node_embedding(pure_sources)
          original_f = self.base_node_embedding(personas)
-         source_f = source_f/torch.norm(source_f , p=2, dim=0)
-         original_f = original_f /torch.norm(original_f , p=2, dim=0)
-         scores = torch.sum(source_f  * original_f,dim=1)
-         scores = torch.exp(scores)/(1+torch.exp(scores))
+         scores = torch.mm(source_f, torch.t(original_f))
+         scores = torch.clamp(scores, min=-10, max=10)
+         scores = torch.sigmoid(scores)
          regularization_loss = -torch.mean(torch.log(scores))
          return regularization_loss
 
@@ -93,13 +91,22 @@ class Splitter(torch.nn.Module):
          return loss
          
 class SplitterTrainer(object):
-
+    """
+    Class for training a Splitter.
+    """
     def __init__(self, graph, args):
+        """
+        :param graph: NetworkX graph object.
+        :param args: Arguments object.
+        """
         self.graph = graph
         self.args = args
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     def base_model_fit(self):
+        """
+        Fitting DeepWalk on base model.
+        """
         self.base_walker = DeepWalker(self.graph, self.args)
         print("\nDoing base random walks.\n")
         self.base_walker.create_features()
@@ -109,12 +116,18 @@ class SplitterTrainer(object):
         del self.base_walker
 
     def create_split(self):
+        """
+        Creating an EgoNetSplitter.
+        """
         self.egonet_splitter = EgoNetSplitter(self.graph)
         self.persona_walker = DeepWalker(self.egonet_splitter.persona_graph, self.args)
         print("\nDoing persona random walks.\n")
         self.persona_walker.create_features()
 
     def setup_model(self):
+        """
+        Creating a model and doing a transfer to GPU.
+        """
         base_node_count = self.graph.number_of_nodes()
         persona_node_count = self.egonet_splitter.persona_graph.number_of_nodes()
         self.model = Splitter(self.args, base_node_count, persona_node_count)
@@ -123,6 +136,9 @@ class SplitterTrainer(object):
         self.model = self.model.to(self.device)
 
     def reset_node_sets(self):
+        """
+        Resetting the node sets.
+        """
         self.pure_sources = []
         self.personas = []
         self.sources = []
@@ -130,13 +146,21 @@ class SplitterTrainer(object):
         self.targets = [] 
 
     def create_batch(self, source_node, context_node):
+        """
+        Augmenting a batch of data.
+        :param source_node: A source node.
+        :param context_node: A target to predict.
+        """
         self.pure_sources = self.pure_sources + [source_node]
         self.personas = self.personas + [self.egonet_splitter.personality_map[source_node]]
-        self.sources  = self.sources + [source_node]+[source_node]*self.args.negative_samples
-        self.contexts = self.contexts + [context_node] + random.sample(self.graph.nodes(),self.args.negative_samples)
+        self.sources  = self.sources + [source_node]*(self.args.negative_samples+1)
+        self.contexts = self.contexts + [context_node] + random.sample(self.egonet_splitter.persona_graph.nodes(),self.args.negative_samples)
         self.targets = self.targets + [1.0] + [0.0]*self.args.negative_samples
 
     def transfer_batch(self):
+        """
+        Transfering the batch to GPU.
+        """
         self.sources = torch.LongTensor(self.sources).to(self.device)
         self.contexts = torch.LongTensor(self.contexts).to(self.device)
         self.targets = torch.FloatTensor(self.targets).to(self.device)
@@ -144,6 +168,9 @@ class SplitterTrainer(object):
         self.pure_sources = torch.LongTensor(self.pure_sources).to(self.device)
 
     def optimize(self):
+        """
+        Doing a weight update.
+        """
         loss = self.model(self.sources, self.contexts, self.targets, self.personas, self.pure_sources)
         loss.backward()
         self.optimizer.step()
@@ -152,6 +179,9 @@ class SplitterTrainer(object):
         return loss.item()
 
     def fit(self):
+        """
+        Fitting a model.
+        """
         self.reset_node_sets()
         self.base_model_fit()
         self.create_split()
@@ -198,5 +228,8 @@ class SplitterTrainer(object):
         self.embedding.to_csv(self.args.embedding_output_path, index = None)
 
     def save_persona_graph_mapping(self):
+        """
+        Saving the persona map.
+        """
         with open(self.args.persona_output_path, "w") as f:
            json.dump(self.egonet_splitter.personality_map, f)                     

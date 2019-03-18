@@ -41,7 +41,7 @@ def parameter_parser():
     parser.add_argument("--walk-length",
                         type = int,
                         default = 40,
-	                help = "Trunctaed random walk length. Default is 200.")
+	                help = "Truncated random walk length. Default is 40.")
 
     parser.add_argument("--seed",
                         type = int,
@@ -56,12 +56,12 @@ def parameter_parser():
     parser.add_argument("--lambd",
                         type = float,
                         default = 0.1,
-	                help = "Regularization parameter. Default is 0.01.")
+	                help = "Regularization parameter. Default is 0.1.")
 
     parser.add_argument("--dimensions",
                         type = int,
-                        default = 32,
-	                help = "Embedding dimensions. Default is 32.")
+                        default = 128,
+	                help = "Embedding dimensions. Default is 128.")
 
     parser.add_argument('--workers',
                         type = int,
