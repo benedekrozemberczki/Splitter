@@ -5,7 +5,12 @@ import networkx as nx
 from gensim.models import Word2Vec
 
 class DeepWalker(object):
-
+    """
+    DeepWalk node embedding learner object.
+    A barebones implementation of "DeepWalk: Online Learning of Social Representations".
+    Paper: https://arxiv.org/abs/1403.6652
+    Video: https://www.youtube.com/watch?v=aZNtHJwfIVg
+    """
     def __init__(self, graph, args):
         self.graph = graph
         self.args = args
