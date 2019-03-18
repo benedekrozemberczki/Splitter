@@ -5,7 +5,9 @@ from utils import tab_printer, graph_reader
 
 def main():
     """
-    Parsing command line parameters, reading data, embedding base graph, creating persona graph and learning a splitter.
+    Parsing command line parameters.
+    Reading data, embedding base graph, creating persona graph and learning a splitter.
+    Saving the persona mapping and the embedding.
     """
     args = parameter_parser()
     torch.manual_seed(args.seed)
