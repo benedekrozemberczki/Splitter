@@ -78,6 +78,8 @@ class Splitter(torch.nn.Module):
          return regularization_loss
 
      def forward(self, sources, contexts, targets, personas, pure_sources):
+         """
+         """
          main_loss = self.calculate_main_loss(sources, contexts, targets)
          regularization_loss = self.calculate_regularization(pure_sources, personas)
          loss = main_loss + self.args.lambd*regularization_loss
