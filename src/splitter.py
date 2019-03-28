@@ -7,9 +7,6 @@ from tqdm import tqdm, trange
 from  walkers import DeepWalker
 from ego_splitting import EgoNetSplitter
 
-def isnan(x):
-    return x != x
-
 class Splitter(torch.nn.Module):
      """
      An implementation of "Splitter: Learning Node Representations that Capture Multiple Social Contexts" (WWW 2019).
