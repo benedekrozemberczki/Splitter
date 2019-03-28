@@ -7,6 +7,9 @@ from tqdm import tqdm, trange
 from  walkers import DeepWalker
 from ego_splitting import EgoNetSplitter
 
+def isnan(x):
+    return x != x
+
 class Splitter(torch.nn.Module):
      """
      An implementation of "Splitter: Learning Node Representations that Capture Multiple Social Contexts" (WWW 2019).
@@ -52,9 +55,10 @@ class Splitter(torch.nn.Module):
          :return main_loss: Loss value.
          """
          node_f = self.node_embedding(sources)
+         node_f = torch.nn.functional.normalize(node_f, p=2, dim=1)
          feature_f = self.node_noise_embedding(contexts)
-         scores = torch.mm(node_f, torch.t(feature_f))
-         scores = torch.clamp(scores, min=-10, max=10)
+         feature_f = torch.nn.functional.normalize(feature_f, p=2, dim=1)
+         scores = torch.sum(node_f*feature_f,dim=1)
          scores = torch.sigmoid(scores)
          main_loss = targets*torch.log(scores) + (1-targets)*torch.log(1-scores)
          main_loss = -torch.mean(main_loss)
@@ -68,9 +72,10 @@ class Splitter(torch.nn.Module):
          :return regularization_loss: Loss value.
          """
          source_f = self.node_embedding(pure_sources)
+         source_f = torch.nn.functional.normalize(source_f, p=2, dim=1)
          original_f = self.base_node_embedding(personas)
-         scores = torch.mm(source_f, torch.t(original_f))
-         scores = torch.clamp(scores, min=-10, max=10)
+         original_f = torch.nn.functional.normalize(original_f, p=2, dim=1)
+         scores = torch.sum(source_f*original_f,dim=1)
          scores = torch.sigmoid(scores)
          regularization_loss = -torch.mean(torch.log(scores))
          return regularization_loss
@@ -187,7 +192,7 @@ class SplitterTrainer(object):
         self.create_split()
         self.setup_model()
         self.model.train()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.args.learning_rate)
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.args.learning_rate)
         self.optimizer.zero_grad()
         print("\nLearning the joint model.\n")
         random.shuffle(self.persona_walker.paths)
@@ -199,6 +204,7 @@ class SplitterTrainer(object):
                 self.steps = 0
                 self.losses = 0
             walk = self.persona_walker.paths[step]
+
             for i in range(self.args.walk_length-self.args.window_size):
                 for j in range(1,self.args.window_size+1):
                     source_node = walk[i]
