@@ -27,9 +27,9 @@ class DeepWalker(object):
         """
         walk = [start_node]
         while len(walk) < self.args.walk_length:
-            walk = walk + [random.sample(nx.neighbors(self.graph,walk[-1]),1)[0]]
             if len(nx.neighbors(self.graph,walk[-1])) ==0:
                 break
+            walk = walk + [random.sample(nx.neighbors(self.graph,walk[-1]),1)[0]]
         return walk
 
     def create_features(self):
