@@ -223,7 +223,9 @@ class SplitterTrainer(object):
         Saving the node embedding.
         """
         print("\n\nSaving the model.\n")
-        nodes = torch.LongTensor([node for node in self.egonet_splitter.persona_graph.nodes()]).to(self.device)
+        nodes = [node for node in self.egonet_splitter.persona_graph.nodes()]
+        nodes.sort()
+        nodes = torch.LongTensor(nodes).to(self.device)
         self.embedding = self.model.node_embedding(nodes).cpu().detach().numpy()
         embedding_header = ["id"] + ["x_" + str(x) for x in range(self.args.dimensions)]
         self.embedding  = np.concatenate([np.array(range(self.embedding.shape[0])).reshape(-1,1),self.embedding],axis=1)
