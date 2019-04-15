@@ -4,7 +4,7 @@ import random
 import numpy as np
 import pandas as pd
 from tqdm import tqdm, trange
-from  walkers import DeepWalker
+from walkers import DeepWalker
 from ego_splitting import EgoNetSplitter
 
 class Splitter(torch.nn.Module):
