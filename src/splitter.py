@@ -105,6 +105,10 @@ class SplitterTrainer(object):
         self.args = args
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    def create_noises(self):
+        self.downsampled_degrees = {node: int(1+self.egonet_splitter.persona_graph.degree(node)**0.75) for node in self.egonet_splitter.persona_graph.nodes()}
+        self.noises = [k for k,v in self.downsampled_degrees.items() for i in range(v)]
+          
     def base_model_fit(self):
         """
         Fitting DeepWalk on base model.
@@ -125,6 +129,7 @@ class SplitterTrainer(object):
         self.persona_walker = DeepWalker(self.egonet_splitter.persona_graph, self.args)
         print("\nDoing persona random walks.\n")
         self.persona_walker.create_features()
+        self.create_noises()
 
     def setup_model(self):
         """
@@ -145,7 +150,13 @@ class SplitterTrainer(object):
         self.personas = []
         self.sources = []
         self.contexts = []
-        self.targets = [] 
+        self.targets = []
+
+    def sample_noise_nodes(self):
+        noise_nodes = [] 
+        for i in range(self.args.negative_samples):
+            noise_nodes.append(random.choice(self.noises))
+        return noise_nodes
 
     def create_batch(self, source_node, context_node):
         """
@@ -156,7 +167,7 @@ class SplitterTrainer(object):
         self.pure_sources = self.pure_sources + [source_node]
         self.personas = self.personas + [self.egonet_splitter.personality_map[source_node]]
         self.sources  = self.sources + [source_node]*(self.args.negative_samples+1)
-        self.contexts = self.contexts + [context_node] + random.sample(self.egonet_splitter.persona_graph.nodes(),self.args.negative_samples)
+        self.contexts = self.contexts + [context_node] + self.sample_noise_nodes()
         self.targets = self.targets + [1.0] + [0.0]*self.args.negative_samples
 
     def transfer_batch(self):
