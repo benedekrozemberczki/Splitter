@@ -153,6 +153,9 @@ class SplitterTrainer(object):
         self.targets = []
 
     def sample_noise_nodes(self):
+        """
+        Sampling noise nodes for context.
+        """
         noise_nodes = [] 
         for i in range(self.args.negative_samples):
             noise_nodes.append(random.choice(self.noises))
