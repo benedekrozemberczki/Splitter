@@ -17,7 +17,7 @@ This repository provides a PyTorch implementation of Splitter as described in th
 > [[Paper]](http://epasto.org/papers/www2019splitter.pdf)
 
 
-The original Tensorflow implementation is available [[here]](https://github.com/google-research/google-research/tree/master/graph_embedding/watch_your_step).
+The original Tensorflow implementation is available [[here]](https://github.com/google-research/google-research/tree/master/graph_embedding/persona).
 
 ### Requirements
 The codebase is implemented in Python 3.5.2. package versions used for development are just below.
