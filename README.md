@@ -1,5 +1,5 @@
 Splitter 	<img src="https://img.shields.io/badge/stars-70+-blue.svg"/>
-        <img src="https://img.shields.io/badge/forks-10+-blue.svg"/>
+        <img src="https://img.shields.io/badge/forks-15+-blue.svg"/>
 	<img src="https://img.shields.io/badge/license-MIT-blue.svg"/>
 ============================================
 A PyTorch implementation of "Splitter: Learning Node Representations that Capture Multiple Social Contexts" (WWW 2019).
