@@ -1,6 +1,4 @@
-Splitter 	<img src="https://img.shields.io/badge/stars-80+-blue.svg"/>
-        <img src="https://img.shields.io/badge/forks-15+-blue.svg"/>
-	<img src="https://img.shields.io/badge/license-MIT-blue.svg"/>
+Splitter ![GitHub stars](https://img.shields.io/github/stars/benedekrozemberczki/Splitter.svg?style=plastic) ![GitHub forks](https://img.shields.io/github/forks/benedekrozemberczki/Splitter.svg?color=blue&style=plastic) ![License](https://img.shields.io/github/license/benedekrozemberczki/Splitter.svg?color=blue&style=plastic)
 ============================================
 A PyTorch implementation of "Splitter: Learning Node Representations that Capture Multiple Social Contexts" (WWW 2019).
 <p align="center">
