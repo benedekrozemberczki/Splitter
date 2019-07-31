@@ -165,20 +165,16 @@ class SplitterTrainer(object):
 
     def process_walk(self, walk):
         """
-        Make resistant to non-connected components.
+        Process random walk (source, context) pairs. Sample negative instances and create persona node list.
         """
 
         left_nodes = [walk[i] for i in range(len(walk)-self.args.window_size) for j in range(1, self.args.window_size+1)]
         right_nodes = [walk[i+j] for i in range(len(walk)-self.args.window_size) for j in range(1, self.args.window_size+1)]
-
         node_pair_count = len(left_nodes)
-        
         source_nodes = left_nodes + right_nodes
         context_nodes = right_nodes + left_nodes
-        
         persona_nodes = np.array([self.egonet_splitter.personality_map[source_node] for source_node in source_nodes])
         pure_source_nodes = np.array(source_nodes)
-        
         source_nodes = np.array((self.args.negative_samples+1)*source_nodes)
         context_nodes = np.concatenate((np.array(context_nodes), np.random.choice(self.noises,node_pair_count*2*self.args.negative_samples)))
         positives = [1.0 for node in range(node_pair_count*2)]
