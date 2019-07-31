@@ -105,6 +105,7 @@ class SplitterTrainer(object):
 
     def create_noises(self):
         """
+        Creating node noise distribution for negative sampling.
         """
         self.downsampled_degrees = {node: int(1+self.egonet_splitter.persona_graph.degree(node)**0.75) for node in self.egonet_splitter.persona_graph.nodes()}
         self.noises = [k for k,v in self.downsampled_degrees.items() for i in range(v)]
