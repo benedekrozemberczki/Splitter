@@ -69,10 +69,8 @@ class Splitter(torch.nn.Module):
          :return regularization_loss: Loss value.
          """
          source_f = self.node_embedding(pure_sources)
-         source_f = torch.nn.functional.normalize(source_f, p=2, dim=1)
          original_f = self.base_node_embedding(personas)
-         original_f = torch.nn.functional.normalize(original_f, p=2, dim=1)
-         scores = torch.sum(source_f*original_f,dim=1)
+         scores = torch.clamp(torch.sum(source_f*original_f,dim=1),-15,15)
          scores = torch.sigmoid(scores)
          regularization_loss = -torch.mean(torch.log(scores))
          return regularization_loss
@@ -106,6 +104,8 @@ class SplitterTrainer(object):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     def create_noises(self):
+        """
+        """
         self.downsampled_degrees = {node: int(1+self.egonet_splitter.persona_graph.degree(node)**0.75) for node in self.egonet_splitter.persona_graph.nodes()}
         self.noises = [k for k,v in self.downsampled_degrees.items() for i in range(v)]
           
@@ -142,46 +142,15 @@ class SplitterTrainer(object):
         self.model.initialize_weights(self.base_node_embedding, self.egonet_splitter.personality_map)
         self.model = self.model.to(self.device)
 
-    def reset_node_sets(self):
-        """
-        Resetting the node sets.
-        """
-        self.pure_sources = []
-        self.personas = []
-        self.sources = []
-        self.contexts = []
-        self.targets = []
-
-    def sample_noise_nodes(self):
-        """
-        Sampling noise nodes for context.
-        """
-        noise_nodes = [] 
-        for i in range(self.args.negative_samples):
-            noise_nodes.append(random.choice(self.noises))
-        return noise_nodes
-
-    def create_batch(self, source_node, context_node):
-        """
-        Augmenting a batch of data.
-        :param source_node: A source node.
-        :param context_node: A target to predict.
-        """
-        self.pure_sources = self.pure_sources + [source_node]
-        self.personas = self.personas + [self.egonet_splitter.personality_map[source_node]]
-        self.sources  = self.sources + [source_node]*(self.args.negative_samples+1)
-        self.contexts = self.contexts + [context_node] + self.sample_noise_nodes()
-        self.targets = self.targets + [1.0] + [0.0]*self.args.negative_samples
-
-    def transfer_batch(self):
+    def transfer_batch(self, source_nodes, context_nodes, targets, persona_nodes, pure_source_nodes):
         """
         Transfering the batch to GPU.
         """
-        self.sources = torch.LongTensor(self.sources).to(self.device)
-        self.contexts = torch.LongTensor(self.contexts).to(self.device)
-        self.targets = torch.FloatTensor(self.targets).to(self.device)
-        self.personas = torch.LongTensor(self.personas).to(self.device)
-        self.pure_sources = torch.LongTensor(self.pure_sources).to(self.device)
+        self.sources = torch.LongTensor(source_nodes).to(self.device)
+        self.contexts = torch.LongTensor(context_nodes).to(self.device)
+        self.targets = torch.FloatTensor(targets).to(self.device)
+        self.personas = torch.LongTensor(persona_nodes).to(self.device)
+        self.pure_sources = torch.LongTensor(pure_source_nodes).to(self.device)
 
     def optimize(self):
         """
@@ -191,14 +160,50 @@ class SplitterTrainer(object):
         loss.backward()
         self.optimizer.step()
         self.optimizer.zero_grad()
-        self.reset_node_sets()
         return loss.item()
+
+    def process_walk(self, walk):
+        """
+        Make resistant to non-connected components.
+        """
+
+        left_nodes = [walk[i] for i in range(len(walk)-self.args.window_size) for j in range(1, self.args.window_size+1)]
+        right_nodes = [walk[i+j] for i in range(len(walk)-self.args.window_size) for j in range(1, self.args.window_size+1)]
+
+        node_pair_count = len(left_nodes)
+        
+        source_nodes = left_nodes + right_nodes
+        context_nodes = right_nodes + left_nodes
+        
+        persona_nodes = np.array([self.egonet_splitter.personality_map[source_node] for source_node in source_nodes])
+        pure_source_nodes = np.array(source_nodes)
+        
+        source_nodes = np.array((self.args.negative_samples+1)*source_nodes)
+        context_nodes = np.concatenate((np.array(context_nodes), np.random.choice(self.noises,node_pair_count*2*self.args.negative_samples)))
+        positives = [1.0 for node in range(node_pair_count*2)]
+        negatives = [0.0 for node in range(node_pair_count*self.args.negative_samples*2)]
+        targets = np.array(positives + negatives)
+        self.transfer_batch(source_nodes, context_nodes, targets, persona_nodes, pure_source_nodes)
+
+    def update_average_loss(self, loss_score):
+        """
+        """
+        self.cummulative_loss = self.cummulative_loss + loss_score
+        self.steps = self.steps + 1
+        average_loss = self.cummulative_loss/self.steps
+        self.walk_steps.set_description("Splitter (Loss=%g)" % round(average_loss,4))
+
+    def reset_loss(self, step):
+        """
+        """
+        if step % 100 == 0:
+            self.cummulative_loss = 0
+            self.steps = 0
 
     def fit(self):
         """
         Fitting a model.
         """
-        self.reset_node_sets()
         self.base_model_fit()
         self.create_split()
         self.setup_model()
@@ -207,30 +212,13 @@ class SplitterTrainer(object):
         self.optimizer.zero_grad()
         print("\nLearning the joint model.\n")
         random.shuffle(self.persona_walker.paths)
-        self.steps = 0
-        self.losses = 0
         self.walk_steps = trange(len(self.persona_walker.paths), desc="Loss")
         for step in self.walk_steps:
-            if step % 1000 ==0:
-                self.steps = 0
-                self.losses = 0
+            self.reset_loss(step)
             walk = self.persona_walker.paths[step]
-
-            for i in range(self.args.walk_length-self.args.window_size):
-                for j in range(1,self.args.window_size+1):
-                    source_node = walk[i]
-                    context_node = walk[i+j]
-                    self.create_batch(source_node, context_node)
-            for i in range(self.args.window_size,self.args.walk_length):
-                for j in range(1,self.args.window_size+1):
-                    source_node = walk[i]
-                    context_node = walk[i-j]
-                    self.create_batch(source_node, context_node)
-            self.transfer_batch()
-            self.losses = self.losses + self.optimize()
-            self.steps = self.steps + 1
-            average_loss = self.losses/self.steps
-            self.walk_steps.set_description("Splitter (Loss=%g)" % round(average_loss,4))
+            self.process_walk(walk)
+            loss_score = self.optimize()
+            self.update_average_loss(loss_score)
 
     def save_embedding(self):
         """
