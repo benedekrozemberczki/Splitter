@@ -191,7 +191,7 @@ class SplitterTrainer(object):
         average_loss = self.cummulative_loss/self.steps
         self.walk_steps.set_description("Splitter (Loss=%g)" % round(average_loss,4))
 
-    def reset_loss(self, step):
+    def reset_average_loss(self, step):
         """
         """
         if step % 100 == 0:
@@ -212,7 +212,7 @@ class SplitterTrainer(object):
         random.shuffle(self.persona_walker.paths)
         self.walk_steps = trange(len(self.persona_walker.paths), desc="Loss")
         for step in self.walk_steps:
-            self.reset_loss(step)
+            self.reset_average_loss(step)
             walk = self.persona_walker.paths[step]
             self.process_walk(walk)
             loss_score = self.optimize()
