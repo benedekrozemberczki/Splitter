@@ -166,6 +166,7 @@ class SplitterTrainer(object):
     def process_walk(self, walk):
         """
         Process random walk (source, context) pairs. Sample negative instances and create persona node list.
+        :param walk: Random walk sequence.
         """
 
         left_nodes = [walk[i] for i in range(len(walk)-self.args.window_size) for j in range(1, self.args.window_size+1)]
