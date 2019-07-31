@@ -168,7 +168,6 @@ class SplitterTrainer(object):
         Process random walk (source, context) pairs. Sample negative instances and create persona node list.
         :param walk: Random walk sequence.
         """
-
         left_nodes = [walk[i] for i in range(len(walk)-self.args.window_size) for j in range(1, self.args.window_size+1)]
         right_nodes = [walk[i+j] for i in range(len(walk)-self.args.window_size) for j in range(1, self.args.window_size+1)]
         node_pair_count = len(left_nodes)
@@ -185,6 +184,8 @@ class SplitterTrainer(object):
 
     def update_average_loss(self, loss_score):
         """
+        Updating the average loss and the description of the time remains bar.
+        :param loss_score: Loss on the sample.
         """
         self.cummulative_loss = self.cummulative_loss + loss_score
         self.steps = self.steps + 1
@@ -193,6 +194,8 @@ class SplitterTrainer(object):
 
     def reset_average_loss(self, step):
         """
+        Doing a reset on the average loss.
+        :param step: Current number of walks processed.
         """
         if step % 100 == 0:
             self.cummulative_loss = 0
