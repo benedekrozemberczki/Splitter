@@ -23,7 +23,7 @@ class DeepWalker(object):
         """
         Doing a truncated random walk.
         :param start_node: Start node for random walk.
-        :return walk: Truncated random walk with fixed maximal length.
+        :return walk: Truncated random walk list of nodes with fixed maximal length.
         """
         walk = [start_node]
         while len(walk) < self.args.walk_length:
