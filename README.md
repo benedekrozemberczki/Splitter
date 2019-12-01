@@ -33,14 +33,16 @@ torch             0.4.1
 gensim            3.6.0
 ```
 ### Datasets
-The code takes the **edge list** of the graph in a csv file. Every row indicates an edge between two nodes separated by a comma. The first row is a header. Nodes should be indexed starting with 0. A sample graph for `Cora` is included in the  `input/` directory.
+<p align="justify">
+The code takes the **edge list** of the graph in a csv file. Every row indicates an edge between two nodes separated by a comma. The first row is a header. Nodes should be indexed starting with 0. A sample graph for `Cora` is included in the  `input/` directory.</p>
 
 ### Outputs
-
-The embeddings are saved in the `input/` directory. Each embedding has a header and a column with the node IDs. Finally, the node embedding is sorted by the node ID column.
+<p align="justify">
+The embeddings are saved in the `input/` directory. Each embedding has a header and a column with the node IDs. Finally, the node embedding is sorted by the node ID column.</p>
 
 ### Options
-The training of a Splitter embedding is handled by the `src/main.py` script which provides the following command line arguments.
+<p align="justify">
+The training of a Splitter embedding is handled by the `src/main.py` script which provides the following command line arguments.</p>
 
 #### Input and output options
 ```
@@ -61,7 +63,9 @@ The training of a Splitter embedding is handled by the `src/main.py` script whic
   --learning-rate      FLOAT   SGD learning rate.                 Default is 0.025
 ```
 ### Examples
-The following commands learn an embedding and save it with the persona map. Training a model on the default dataset.
+<p align="justify">
+The following commands learn an embedding and save it with the persona map. Training a model on the default dataset.</p>
+
 ```
 python src/main.py
 ```
