@@ -1,5 +1,7 @@
+"""Running the Splitter."""
+
 import torch
-from parser import parameter_parser
+from param_parser import parameter_parser
 from splitter import SplitterTrainer
 from utils import tab_printer, graph_reader
 

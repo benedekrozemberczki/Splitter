@@ -126,7 +126,8 @@ class SplitterTrainer(object):
         """
         Creating an EgoNetSplitter.
         """
-        self.egonet_splitter = EgoNetSplitter(self.graph)
+        self.egonet_splitter = EgoNetSplitter()
+        self.egonet_splitter.fit(self.graph)
         self.persona_walker = DeepWalker(self.egonet_splitter.persona_graph, self.args)
         print("\nDoing persona random walks.\n")
         self.persona_walker.create_features()

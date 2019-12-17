@@ -1,61 +1,99 @@
+"""Ego-Splitter class"""
+
+import community
 import networkx as nx
 from tqdm import tqdm
 
-class EgoNetSplitter(object):
-    """
-    A lightweight implementation of "Ego-Splitting Framework: from Non-Overlapping to Overlapping Clusters". 
-    Paper: https://www.eecs.yorku.ca/course_archive/2017-18/F/6412/reading/kdd17p145.pdf
-    Video: https://www.youtube.com/watch?v=xMGZo-F_jss
-    Slides: https://epasto.org/papers/kdd2017-Slides.pdf
-    """
-    def __init__(self, graph):
-        """
-        :param graph: Networkx object.
-        :param resolution: Resolution parameter of Python Louvain.
-        """
-        self.graph = graph
-        self.create_egonets()
-        self.map_personalities()
-        self.create_persona_graph()
 
-    def create_egonet(self, node):
+class EgoNetSplitter(object):
+    """An implementation of `"Ego-Splitting" see:
+    https://www.eecs.yorku.ca/course_archive/2017-18/F/6412/reading/kdd17p145.pdf
+    From the KDD '17 paper "Ego-Splitting Framework: from Non-Overlapping to Overlapping Clusters".
+    The tool first creates the egonets of nodes.
+    A persona-graph is created which is clustered by the Louvain method.
+    The resulting overlapping cluster memberships are stored as a dictionary.
+    Args:
+        resolution (float): Resolution parameter of Python Louvain. Default 1.0.
+    """
+    def __init__(self, resolution=1.0):
+        self.resolution = resolution
+
+    def _create_egonet(self, node):
         """
         Creating an ego net, extracting personas and partitioning it.
-        :param node: Node ID for egonet (ego node).
+        Args:
+            node: Node ID for egonet (ego node).
         """
         ego_net_minus_ego = self.graph.subgraph(self.graph.neighbors(node))
-        components = {i: nodes for i, nodes in enumerate(nx.connected_components(ego_net_minus_ego))}
+        components = {i: n for i, n in enumerate(nx.connected_components(ego_net_minus_ego))}
         new_mapping = {}
         personalities = []
         for k, v in components.items():
             personalities.append(self.index)
             for other_node in v:
-                new_mapping[other_node] = self.index 
-            self.index = self.index +1
+                new_mapping[other_node] = self.index
+            self.index = self.index+1
         self.components[node] = new_mapping
         self.personalities[node] = personalities
 
-    def create_egonets(self):
+    def _create_egonets(self):
         """
         Creating an egonet for each node.
         """
         self.components = {}
         self.personalities = {}
         self.index = 0
-        print("\nCreating egonets.\n")
+        print("Creating egonets.")
         for node in tqdm(self.graph.nodes()):
-            self.create_egonet(node)
+            self._create_egonet(node)
 
-    def map_personalities(self):
+    def _map_personalities(self):
         """
         Mapping the personas to new nodes.
         """
-        self.personality_map = {persona: node for node in self.graph.nodes() for persona in self.personalities[node]}
+        self.personality_map = {p: n for n in self.graph.nodes() for p in self.personalities[n]}
 
-    def create_persona_graph(self):
+    def _get_new_edge_ids(self, edge):
+        """
+        Getting the new edge identifiers.
+        Args:
+            edge: Edge being mapped to the new identifiers.
+        """
+        return (self.components[edge[0]][edge[1]], self.components[edge[1]][edge[0]])
+
+    def _create_persona_graph(self):
         """
         Create a persona graph using the egonet components.
         """
-        print("\nCreating the persona graph.\n")
-        self.persona_graph_edges = [(self.components[edge[0]][edge[1]], self.components[edge[1]][edge[0]]) for edge in tqdm(self.graph.edges())]
+        print("Creating the persona graph.")
+        self.persona_graph_edges = [self._get_new_edge_ids(e) for e in tqdm(self.graph.edges())]
         self.persona_graph = nx.from_edgelist(self.persona_graph_edges)
+
+    def _create_partitions(self):
+        """
+        Creating a non-overlapping clustering of nodes in the persona graph.
+        """
+        print("Clustering the persona graph.")
+        self.partitions = community.best_partition(self.persona_graph, resolution=self.resolution)
+        self.overlapping_partitions = {node: [] for node in self.graph.nodes()}
+        for node, membership in self.partitions.items():
+            self.overlapping_partitions[self.personality_map[node]].append(membership)
+
+    def fit(self, graph):
+        """
+        Fitting an Ego-Splitter clustering model.
+        Arg types:
+            * **graph** *(NetworkX graph)* - The graph to be clustered.
+        """
+        self.graph = graph
+        self._create_egonets()
+        self._map_personalities()
+        self._create_persona_graph()
+        self._create_partitions()
+
+    def get_memberships(self):
+        r"""Getting the cluster membership of nodes.
+        Return types:
+            * **memberships** *(dictionary of lists)* - Cluster memberships.
+        """
+        return self.overlapping_partitions

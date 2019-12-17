@@ -1,3 +1,5 @@
+"""DeepWalker class."""
+
 import random
 import numpy as np
 from tqdm import tqdm
@@ -18,18 +20,19 @@ class DeepWalker(object):
         """
         self.graph = graph
         self.args = args
-        
-    def small_walk(self, start_node):
+
+    def do_walk(self, node):
         """
-        Doing a truncated random walk.
-        :param start_node: Start node for random walk.
-        :return walk: Truncated random walk list of nodes with fixed maximal length.
+        Doing a single truncated random walk from a source node.
+        :param node: Source node of the truncated random walk.
+        :return walk: A single random walk.
         """
-        walk = [start_node]
+        walk = [node]
         while len(walk) < self.args.walk_length:
-            if len(nx.neighbors(self.graph,walk[-1])) ==0:
+            nebs = [n for n in nx.neighbors(self.graph, walk[-1])]
+            if len(nebs) == 0:
                 break
-            walk = walk + [random.sample(nx.neighbors(self.graph,walk[-1]),1)[0]]
+            walk.append(random.choice(nebs))
         return walk
 
     def create_features(self):
@@ -38,8 +41,8 @@ class DeepWalker(object):
         """
         self.paths = []
         for node in tqdm(self.graph.nodes()):
-            for k in range(self.args.number_of_walks):
-                walk = self.small_walk(node)
+            for _ in range(self.args.number_of_walks):
+                walk = self.do_walk(node)
                 self.paths.append(walk)
 
     def learn_base_embedding(self):
@@ -48,6 +51,14 @@ class DeepWalker(object):
         :return self.embedding: Embedding of nodes in the latent space.
         """
         self.paths = [[str(node) for node in walk] for walk in self.paths]
-        model = Word2Vec(self.paths, size = self.args.dimensions, window = self.args.window_size, min_count = 1, sg = 1, workers = self.args.workers, iter = 1)
+
+        model = Word2Vec(self.paths,
+                         size=self.args.dimensions,
+                         window=self.args.window_size,
+                         min_count=1,
+                         sg=1,
+                         workers=self.args.workers,
+                         iter=1)
+
         self.embedding = np.array([list(model[str(n)]) for n in self.graph.nodes()])
         return self.embedding
