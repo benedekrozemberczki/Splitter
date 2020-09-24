@@ -1,6 +1,6 @@
 Splitter ![License](https://img.shields.io/github/license/benedekrozemberczki/Splitter.svg?color=blue&style=plastic) [![Arxiv](https://img.shields.io/badge/ArXiv-1905.02138-orange.svg?color=blue&style=plastic)](https://arxiv.org/pdf/1905.02138.pdf) 
 ============================================
-A PyTorch implementation of "Splitter: Learning Node Representations that Capture Multiple Social Contexts" (WWW 2019).
+A PyTorch implementation of **Splitter: Learning Node Representations that Capture Multiple Social Contexts (WWW 2019).**
 <p align="center">
   <img width="800" src="splitter.jpg">
 </p>
