@@ -81,3 +81,9 @@ Increasing the number of walks and the walk length.
 ```
 python src/main.py --number-of-walks 20 --walk-length 80
 ```
+
+--------------------------------------------------------------------------------
+
+**License**
+
+- [MIT License](https://github.com/benedekrozemberczki/Splitter/blob/master/LICENSE)
