@@ -1,4 +1,4 @@
-Splitter [![Arxiv](https://img.shields.io/badge/ArXiv-1905.02138-orange.svg?color=blue&style=plastic)](https://arxiv.org/pdf/1905.02138.pdf) [![repo size](https://img.shields.io/github/repo-size/benedekrozemberczki/Splitter.svg)](https://github.com/benedekrozemberczki/Splitter/archive/master.zip)
+Splitter [![Arxiv](https://img.shields.io/badge/ArXiv-1905.02138-orange.svg)](https://arxiv.org/pdf/1905.02138.pdf) [![repo size](https://img.shields.io/github/repo-size/benedekrozemberczki/Splitter.svg)](https://github.com/benedekrozemberczki/Splitter/archive/master.zip)
 ============================================
 A PyTorch implementation of **Splitter: Learning Node Representations that Capture Multiple Social Contexts (WWW 2019).**
 <p align="center">
