@@ -87,3 +87,5 @@ python src/main.py --number-of-walks 20 --walk-length 80
 **License**
 
 - [GNU License](https://github.com/benedekrozemberczki/Splitter/blob/master/LICENSE)
+
+--------------------------------------------------------------------------------
