@@ -62,6 +62,11 @@ The training of a Splitter embedding is handled by the `src/main.py` script whic
   --workers            INT     Number of cores for pre-training.  Default is 4.   
   --learning-rate      FLOAT   SGD learning rate.                 Default is 0.025
 ```
+
+
+--------------------------------------------------------------------------------
+
+
 ### Examples
 <p align="justify">
 The following commands learn an embedding and save it with the persona map. Training a model on the default dataset.</p>
